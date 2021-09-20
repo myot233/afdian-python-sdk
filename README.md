@@ -1,7 +1,7 @@
 # afdian-python-sdk
 爱发电接口封装
 
-[api文档](https://afdian.net/@afdian?tab=feed)
+[api文档](https://afdian.net/dashboard/dev)
 
 # 用例
 ```Python
