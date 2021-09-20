@@ -104,8 +104,3 @@ class AfdianApiClient:
         }
         return data
 
-
-if __name__ == '__main__':
-    client = AfdianApiClient("8aPyW6XDCe3pGsfqNJAUBxVME45KYu7v", "818cb5d6e86c11eb8b2852540025c377")
-    print(asyncio.get_event_loop().run_until_complete(client.get_orders_by_page(1)))
-    # client.g
