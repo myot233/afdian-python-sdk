@@ -40,8 +40,8 @@ class AfdianApiClient:
 
         返回:一个装有所有赞助选项信息的list
         """
-        pageNum = (await self.get_orders_by_page(1))["data"]["total_page"]
-        all_sponsers = [(await self.get_orders_by_page(i))["data"]["list"] for i in range(1, pageNum + 1)]
+        pageNum = (await self.get_orders_by_page(1))["total_page"]
+        all_sponsers = [(await self.get_orders_by_page(i))["list"] for i in range(1, pageNum + 1)]
         temp = []
         for i in all_sponsers:
             for f in i: temp.append(f)
@@ -53,8 +53,8 @@ class AfdianApiClient:
 
         返回:一个装有所有赞助者信息的list
         """
-        pageNum = (await self.get_sponsors_by_page(1))["data"]["total_page"]
-        all_sponsers = [(await self.get_sponsors_by_page(i))["data"]["list"] for i in range(1, pageNum + 1)]
+        pageNum = (await self.get_sponsors_by_page(1))["total_page"]
+        all_sponsers = [(await self.get_sponsors_by_page(i))["list"] for i in range(1, pageNum + 1)]
         temp = []
         for i in all_sponsers:
             for f in i: temp.append(f)
@@ -90,7 +90,7 @@ class AfdianApiClient:
             json = await resp.json()
             if json["ec"] != 200:
                 raise AfdianException(json["em"])
-            return json
+            return json["data"]
 
     def __data_model(self, params: dict):
         json_params = json.dumps(params)
@@ -104,3 +104,8 @@ class AfdianApiClient:
         }
         return data
 
+
+if __name__ == '__main__':
+    token = "你的token"
+    user_id = "你的user_id"
+    client = AfdianApiClient(token="8aPyW6XDCe3pGsfqNJAUBxVME45KYu7v", user_id="818cb5d6e86c11eb8b2852540025c377")
