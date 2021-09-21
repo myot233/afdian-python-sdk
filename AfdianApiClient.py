@@ -109,3 +109,4 @@ if __name__ == '__main__':
     token = "你的token"
     user_id = "你的user_id"
     client = AfdianApiClient(token="8aPyW6XDCe3pGsfqNJAUBxVME45KYu7v", user_id="818cb5d6e86c11eb8b2852540025c377")
+    #
