@@ -1,3 +1,4 @@
+from typing import List
 import asyncio
 import hashlib
 import json
@@ -20,7 +21,7 @@ class AfdianApiClient:
 
         返回:dict
         """
-        return await self.call_Api("ping", {"test": "test"})
+        return await self.call_api("ping", {"test": "test"})
 
     async def get_sponsors_by_page(self, page: int):
         """
@@ -32,32 +33,38 @@ class AfdianApiClient:
 
         返回:dict
         """
-        return await self.call_Api("query-sponsor", {"page": page})
+        return await self.call_api("query-sponsor", {"page": page})
 
-    async def get_all_orders(self) -> list[dict]:
+    async def get_all_orders(self) -> List[dict]:
         """
         获取所有的赞助选项
 
         返回:一个装有所有赞助选项信息的list
         """
-        pageNum = (await self.get_orders_by_page(1))["total_page"]
-        all_sponsers = [(await self.get_orders_by_page(i))["list"] for i in range(1, pageNum + 1)]
+        page_num = (await self.get_orders_by_page(1))["total_page"]
+        all_sponsers = [
+            (await self.get_orders_by_page(i))["list"] for i in range(1, page_num + 1)
+        ]
         temp = []
         for i in all_sponsers:
-            for f in i: temp.append(f)
+            for f in i:
+                temp.append(f)
         return temp
 
-    async def get_all_sponsors(self) -> list[dict]:
+    async def get_all_sponsors(self) -> List[dict]:
         """
         获取所有的赞助者
 
         返回:一个装有所有赞助者信息的list
         """
-        pageNum = (await self.get_sponsors_by_page(1))["total_page"]
-        all_sponsers = [(await self.get_sponsors_by_page(i))["list"] for i in range(1, pageNum + 1)]
+        page_num = (await self.get_sponsors_by_page(1))["total_page"]
+        all_sponsers = [
+            (await self.get_sponsors_by_page(i))["list"] for i in range(1, page_num + 1)
+        ]
         temp = []
         for i in all_sponsers:
-            for f in i: temp.append(f)
+            for f in i:
+                temp.append(f)
         return temp
 
     async def get_orders_by_page(self, page: int) -> dict:
@@ -70,9 +77,9 @@ class AfdianApiClient:
 
         返回:dict
         """
-        return await self.call_Api("query-order", {"page": page})
+        return await self.call_api("query-order", {"page": page})
 
-    async def call_Api(self, apiName: str, data: dict) -> dict:
+    async def call_api(self, apiName: str, data: dict) -> dict:
         """
         调用一个爱发电Api
 
@@ -84,9 +91,11 @@ class AfdianApiClient:
 
         返回:dict
         """
-        async with aiohttp.request("POST",
-                                   f"https://afdian.net/api/open/{apiName}",
-                                   data=self.__data_model(data)) as resp:
+        async with aiohttp.request(
+            "POST",
+            f"https://afdian.net/api/open/{apiName}",
+            data=self.__data_model(data),
+        ) as resp:
             json = await resp.json()
             if json["ec"] != 200:
                 raise AfdianException(json["em"])
@@ -100,13 +109,9 @@ class AfdianApiClient:
             "params": json_params,
             "ts": ts,
             "sign": hashlib.md5(
-                f"{self.token}params{json_params}ts{ts}user_id{self.user_id}".encode("utf-8")).hexdigest()
+                f"{self.token}params{json_params}ts{ts}user_id{self.user_id}".encode(
+                    "utf-8"
+                )
+            ).hexdigest(),
         }
         return data
-
-
-if __name__ == '__main__':
-    token = "你的token"
-    user_id = "你的user_id"
-    client = AfdianApiClient(token="8aPyW6XDCe3pGsfqNJAUBxVME45KYu7v", user_id="818cb5d6e86c11eb8b2852540025c377")
-    #
